@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -153,8 +154,7 @@ public class TonyCatRequest implements HttpServletRequest {
 	}
 	@Override
 	public Map<String, String[]> getParameterMap() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.parameterMap;
 	}
 	@Override
 	public String getProtocol() {
@@ -364,8 +364,7 @@ public class TonyCatRequest implements HttpServletRequest {
 	}
 	@Override
 	public String getRequestURI() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.requestURI;
 	}
 	@Override
 	public StringBuffer getRequestURL() {

@@ -10,12 +10,13 @@ import java.util.Locale;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+
 /**
  * 实现response接口
-* <p>Title: TonyCatResponse</p>  
-* <p>Description: </p>  
-* @author tony.tian  
-* @date 2018年11月7日
+ * Title: TonyCatResponse 
+ * Description:
+ * @author tony.tian
+ * @date 2018年11月7日
  */
 public class TonyCatResponse implements HttpServletResponse {
 	protected String characterEncoding;
@@ -30,13 +31,7 @@ public class TonyCatResponse implements HttpServletResponse {
 	protected String header;
 	protected Collection<String> headers = new ArrayList<String>();
 	protected Collection<String> headerNames = new ArrayList<String>();
-	
-	public TonyCatResponse(){
-		
-	}
-	public TonyCatResponse(ServletOutputStream servletOutputStream) {
-		this.servletoutputStream = servletOutputStream;
-	}
+
 	public String getCharacterEncoding() {
 		// TODO Auto-generated method stub
 		return null;

@@ -1,20 +1,25 @@
 package com.tony.tonycat.request;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.ServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.utils.HttpClientUtils;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 
+import com.tony.tonycat.exception.BlankRequestException;
 import com.tony.tonycat.io.TonyCatInputStream;
+import com.tony.tonycat.util.RequestResolver;
 /**
  * 用于将sokect封装为request
 * <p>Title: TonyCatRequestProcess</p>  
@@ -24,11 +29,15 @@ import com.tony.tonycat.io.TonyCatInputStream;
  */
 public class TonyCatRequestProcess {
 	private static Socket socket;
-	public static ServletRequest ProcessRequest(Socket socket) {
+	private static RequestResolver requestResolver;
+	public static ServletRequest ProcessRequest(Socket socket) throws BlankRequestException {
 		TonyCatRequestProcess.socket = socket;
+		TonyCatRequestProcess.requestResolver = new RequestResolver(getRequestString());
 		TonyCatRequestSetter tonyCatRequestSetter = new TonyCatRequestSetter();
 		tonyCatRequestSetter.setServletInputStream(getServletInputStream());
-//		tonyCatRequestSetter.setParameterMap(parameterMap);
+		tonyCatRequestSetter.setParameterMap(getParameterMap());
+		tonyCatRequestSetter.setMethod(getRequestMethod());
+		tonyCatRequestSetter.setRequestURI(getUri());
 		return tonyCatRequestSetter;
 	}
 	/**
@@ -36,16 +45,30 @@ public class TonyCatRequestProcess {
 	 * <p>Title: getRequestString</p>  
 	 * <p>Description: </p>  
 	 * @return
+	 * @throws BlankRequestException 
 	 */
-	private static String getRequestString() {
-		byte[] bt = new byte[1024];
+	private static String getRequestString() throws BlankRequestException {
+		byte[] bt = new byte[200];
+		InputStream is =null;
+		BufferedInputStream bis = null;
 		try {
-			InputStream is = socket.getInputStream();
-			is.read(bt);
+			is = socket.getInputStream();
+			bis = new BufferedInputStream(is);
+			bis.read(bt);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return new String(bt);
+		String result = new String(bt);
+		if(StringUtils.isBlank(result.trim())) {
+			try {
+				is.close();
+				bis.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			throw new BlankRequestException();
+		}
+		return result;
 	}
 	/**
 	 * 从socket中获取输入流并转换成ServletInputStream
@@ -71,19 +94,23 @@ public class TonyCatRequestProcess {
 	 * @param socket
 	 * @return
 	 */
-	private static Map<String,String[]> getParameterMap(Socket socket){
-		CloseableHttpClient client = HttpClientBuilder.create().build(); 
-//		client.execute(request)
-		return null;
-		
+	private static Map<String,String[]> getParameterMap(){
+		return requestResolver.getParameterMap();
 	}
-	
-	
 	/**
 	 * 获取uri
 	 */
 	public static String getUri() {
-		return null;
+		return requestResolver.getUri();
+	}
+	/**
+	 * 获取请求方法
+	 * <p>Title: getRequestMethod</p>  
+	 * <p>Description: </p>  
+	 * @return
+	 */
+	public static String getRequestMethod() {
+		return requestResolver.getRequestMethod();
 	}
 	/**
 	 * 获取
