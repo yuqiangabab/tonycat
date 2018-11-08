@@ -4,5 +4,3 @@
 *.prefs
 *.class
 *.MF
-target/classes/META-INF/maven/com.tony/tonycat/pom.properties
-*.xml
