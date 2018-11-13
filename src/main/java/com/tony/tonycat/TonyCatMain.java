@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.tony.tonycat.exception.BlankRequestException;
 import com.tony.tonycat.request.TonyCatRequestProcess;
 import com.tony.tonycat.response.TonyCatResponseProcess;
-import com.tony.tonycat.util.WebInformation;
+import com.tony.tonycat.web.WebInformation;
 /**
  * Èë¿ÚÀà
 * <p>Title: TonyCatMain</p>  
