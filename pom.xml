@@ -25,11 +25,11 @@
 			<artifactId>httpclient</artifactId>
 			<version>4.5.3</version>
 		</dependency>
-		<dependency>
-			<groupId>com.tony</groupId>
-			<artifactId>testweb</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.tony</groupId> -->
+<!-- 			<artifactId>testweb</artifactId> -->
+<!-- 			<version>0.0.1-SNAPSHOT</version> -->
+<!-- 		</dependency> -->
 		<dependency>
     <groupId>dom4j</groupId>
     <artifactId>dom4j</artifactId>

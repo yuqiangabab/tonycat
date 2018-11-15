@@ -1,6 +1,8 @@
 package com.tony.tonycat.web;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
@@ -68,7 +70,6 @@ public class WebApplication {
 				//暂不支持通配符
 				if(pathName.equals(urlPattern)) {
 					try {
-						System.out.println("loadClassPath:" + System.);
 						Class clazz = Class.forName(servletDom.getServletClass());
 						Servlet currentServlet = (Servlet)clazz.newInstance();
 						servletMap.put(urlPattern, currentServlet);
