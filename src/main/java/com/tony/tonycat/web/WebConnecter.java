@@ -39,7 +39,7 @@ public class WebConnecter {
 		File[] webs = webapps.listFiles();
 		for(File web : webs) {
 			WebApplication webApplication = new WebApplication(web.getName());
-			webApplicationMaps.put(web.getName(),webApplication);
+			webApplicationMaps.put("/" + web.getName(),webApplication);
 		}
 	}
 	/**
@@ -51,10 +51,10 @@ public class WebConnecter {
 	 */
 	public static void connect(HttpServletRequest request,HttpServletResponse response) {
 		String requestAppcationPath = request.getContextPath();
-		System.out.println("requestAppcationPath:" + requestAppcationPath);
+//		System.out.println("requestAppcationPath:" + requestAppcationPath);
 		WebApplication webApplication = webApplicationMaps.get(requestAppcationPath);
-		System.out.println("webApplication:" + webApplication);
-		System.out.println("webApplicationMaps:" + webApplicationMaps);
+//		System.out.println("webApplication:" + webApplication);
+//		System.out.println("webApplicationMaps:" + webApplicationMaps);
 		webApplication.excute(request, response);
 	}
 	

@@ -372,8 +372,7 @@ public class TonyCatRequest implements HttpServletRequest {
 	}
 	@Override
 	public String getServletPath() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.servletPath;
 	}
 	@Override
 	public HttpSession getSession(boolean create) {

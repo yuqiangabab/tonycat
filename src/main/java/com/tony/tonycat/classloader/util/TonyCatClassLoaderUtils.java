@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+
+import com.tony.tonycat.util.TonyCollectionUtils;
 /**
  * ClassLoaderπ§æﬂ¿‡
 * Title: TonyCatClassLoaderUtils 
@@ -85,6 +87,10 @@ public class TonyCatClassLoaderUtils {
     private static List<File> scanDir(String jarPath) {
         List<File> list = new ArrayList<File>();
         File[] files = new File(jarPath).listFiles();
+        System.out.println("classLoaderJarPath:" + jarPath);
+        if(files == null) {
+        	return TonyCollectionUtils.getEmptyList();
+        }
         for (File f : files) {
             if (f.isFile() && f.getName().endsWith(".jar"))
                 list.add(f);

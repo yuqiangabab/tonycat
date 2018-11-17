@@ -32,11 +32,11 @@ public class TonyCatResponseProcess {
 	 */
 	private static ServletOutputStream getServletOutStream() {
 		TonyCatOutputStream tcos = null;
-		try {
-			tcos = new TonyCatOutputStream(socket.getOutputStream());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			tcos = new TonyCatOutputStream(socket.getOutputStream());
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 		return tcos;
 
 	}

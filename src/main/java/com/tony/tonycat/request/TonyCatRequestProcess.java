@@ -4,18 +4,12 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.ServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.utils.HttpClientUtils;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.HttpClients;
 
 import com.tony.tonycat.exception.BlankRequestException;
 import com.tony.tonycat.io.TonyCatInputStream;
@@ -39,6 +33,7 @@ public class TonyCatRequestProcess {
 		tonyCatRequestSetter.setMethod(getRequestMethod());
 		tonyCatRequestSetter.setRequestURI(getUri());
 		tonyCatRequestSetter.setContextPath(getContextPath());
+		tonyCatRequestSetter.setServletPath(getServletPath());
 		return tonyCatRequestSetter;
 	}
 	/**
@@ -121,6 +116,12 @@ public class TonyCatRequestProcess {
 	 */
 	public static String getContextPath() {
 		return requestResolver.getContextPath();
+	}
+	/**
+	 * 获取servletpath
+	 */
+	public static String getServletPath() {
+		return requestResolver.getServletPath();
 	}
 	/**
 	 * 获取

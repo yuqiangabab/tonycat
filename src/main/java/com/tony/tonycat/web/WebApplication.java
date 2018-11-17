@@ -48,7 +48,7 @@ public class WebApplication {
 	public WebApplication(String webApplicationName) {
 		String webXmlPath = TonyCatPathUtils.getWebXmlPath(webApplicationName);
 		this.webXmlDom  = WebXMLResolver.resolver(webXmlPath);
-		tonyCatWebClassLoader = new TonyCatWebClassLoader(webApplicationName);
+		tonyCatWebClassLoader = new TonyCatWebClassLoader(webApplicationName,this.getClass().getClassLoader());
 	}
 	/**
 	 * 处理请求/响应

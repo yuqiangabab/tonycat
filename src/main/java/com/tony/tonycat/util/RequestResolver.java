@@ -42,8 +42,14 @@ public class RequestResolver {
 		return uriAndPar.split("\\?")[0];
 	}
 	public String getContextPath() {
-		String contextPath = "/" + this.getUri().split("/")[0];
+		System.out.println("this.getUri() :" + this.getUri());
+		String contextPath = "/" + this.getUri().split("/")[1];
 		return contextPath;
+	}
+	public String getServletPath() {
+		String servletPath = "/" + this.getUri().split("/")[2];
+		System.out.println("servletPath:" + servletPath);
+		return servletPath;
 	}
 	/**
 	 * 获取请求方法
