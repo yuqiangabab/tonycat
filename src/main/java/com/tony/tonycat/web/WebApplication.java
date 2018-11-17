@@ -1,5 +1,6 @@
 package com.tony.tonycat.web;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
@@ -11,7 +12,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.SystemUtils;
+
+import com.tony.tonycat.classloader.TonyCatWebClassLoader;
+import com.tony.tonycat.util.TonyCatPathUtils;
 import com.tony.tonycat.util.TonyCollectionUtils;
+import com.tony.tonycat.web.resolver.WebXMLResolver;
 import com.tony.tonycat.web.resolver.entity.ServletDom;
 import com.tony.tonycat.web.resolver.entity.WebXmlDom;
 /**
@@ -34,6 +40,16 @@ public class WebApplication {
 	 * servlet map,映射不同路径的servlet
 	 */
 	private Map<String,Servlet> servletMap = TonyCollectionUtils.getEmptyMap();
+	/**
+	 * 当前应用类加载器
+	 */
+	private TonyCatWebClassLoader tonyCatWebClassLoader;
+	
+	public WebApplication(String webApplicationName) {
+		String webXmlPath = TonyCatPathUtils.getWebXmlPath(webApplicationName);
+		this.webXmlDom  = WebXMLResolver.resolver(webXmlPath);
+		tonyCatWebClassLoader = new TonyCatWebClassLoader(webApplicationName);
+	}
 	/**
 	 * 处理请求/响应
 	 * Title: excute 
@@ -70,7 +86,7 @@ public class WebApplication {
 				//暂不支持通配符
 				if(pathName.equals(urlPattern)) {
 					try {
-						Class clazz = Class.forName(servletDom.getServletClass());
+						Class clazz = Class.forName(servletDom.getServletClass(),false,tonyCatWebClassLoader);
 						Servlet currentServlet = (Servlet)clazz.newInstance();
 						servletMap.put(urlPattern, currentServlet);
 						return currentServlet;
@@ -87,16 +103,17 @@ public class WebApplication {
 	public String getWebApplicationName() {
 		return webApplicationName;
 	}
-	public void setWebApplicationName(String webApplicationName) {
-		this.webApplicationName = webApplicationName;
-	}
 	public WebXmlDom getWebXmlDom() {
 		return webXmlDom;
-	}
-	public void setWebXmlDom(WebXmlDom webXmlDom) {
-		this.webXmlDom = webXmlDom;
 	}
 	public static void main(String[] args) {
 		System.out.println("/index.dhtml".matches("/index.dhtml"));
 	}
+	@Override
+	public String toString() {
+		return "WebApplication [webApplicationName=" + webApplicationName + ", webXmlDom=" + webXmlDom + ", servletMap="
+				+ servletMap + ", tonyCatWebClassLoader=" + tonyCatWebClassLoader + "]";
+	}
+	
+	
 }

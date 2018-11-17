@@ -38,6 +38,7 @@ public class TonyCatRequestProcess {
 		tonyCatRequestSetter.setParameterMap(getParameterMap());
 		tonyCatRequestSetter.setMethod(getRequestMethod());
 		tonyCatRequestSetter.setRequestURI(getUri());
+		tonyCatRequestSetter.setContextPath(getContextPath());
 		return tonyCatRequestSetter;
 	}
 	/**
@@ -111,6 +112,15 @@ public class TonyCatRequestProcess {
 	 */
 	public static String getRequestMethod() {
 		return requestResolver.getRequestMethod();
+	}
+	/**
+	 * 获取应用路径
+	 * Title: getContextPath 
+	 * Description:   
+	 * @return
+	 */
+	public static String getContextPath() {
+		return requestResolver.getContextPath();
 	}
 	/**
 	 * 获取

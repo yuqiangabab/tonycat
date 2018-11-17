@@ -4,16 +4,15 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import javax.servlet.Servlet;
-import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.tony.tonycat.exception.BlankRequestException;
 import com.tony.tonycat.request.TonyCatRequestProcess;
 import com.tony.tonycat.response.TonyCatResponseProcess;
-import com.tony.tonycat.web.WebInformation;
+import com.tony.tonycat.web.WebConnecter;
 /**
  * 入口类
 * <p>Title: TonyCatMain</p>  
@@ -35,12 +34,11 @@ public class TonyCatMain {
 			}
 			ServletResponse response = TonyCatResponseProcess.ProcessResponse(socket);
 			HttpServletRequest httpServletRequest = (HttpServletRequest)request;
-			Servlet servlet = WebInformation.getServletByUri(httpServletRequest.getRequestURI());
-			try {
-				servlet.service(request, response);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			HttpServletResponse httpServletResponse = (HttpServletResponse)response;
+			/**
+			 * 执行请求
+			 */
+			WebConnecter.connect(httpServletRequest, httpServletResponse);
 			socket.close();
 		}
 	}

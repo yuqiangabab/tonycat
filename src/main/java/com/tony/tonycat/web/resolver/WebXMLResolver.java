@@ -25,7 +25,7 @@ import com.tony.tonycat.web.resolver.entity.WebXmlDom;
  */
 public class WebXMLResolver {
 	
-	public static WebXmlDom resolve(String filePath) {
+	public static WebXmlDom resolver(String filePath) {
 		return resolver(new File(filePath));
 	}
 	public static WebXmlDom resolver(File file) {
@@ -84,8 +84,5 @@ public class WebXMLResolver {
 		}
 		return result;
 	}
-	
-	public static void main(String[] args) {
-		System.out.println(resolve("D:\\apache-tomcat-8.0.46\\webapps\\examples\\WEB-INF/web.xml"));
-	}
+
 }

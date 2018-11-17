@@ -41,6 +41,10 @@ public class RequestResolver {
 		String uriAndPar = requestArray[0].split("\\s")[1];
 		return uriAndPar.split("\\?")[0];
 	}
+	public String getContextPath() {
+		String contextPath = "/" + this.getUri().split("/")[0];
+		return contextPath;
+	}
 	/**
 	 * 获取请求方法
 	 * <p>Title: getRequestMethod</p>  
@@ -106,6 +110,7 @@ public class RequestResolver {
 		return resultMap;
 		
 	}
+	
 	/**
 	 * 后续添加方法请求头方法。。。。
 	 */
