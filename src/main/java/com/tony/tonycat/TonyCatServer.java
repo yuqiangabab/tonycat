@@ -21,30 +21,24 @@ public class TonyCatServer {
 		while(true) {
 			System.out.println("开始接收请求！");
 			Socket socket = serverSocket.accept();
+			System.out.println("收到请求!");
+//			System.out.println("classLoader:" + this.getClass().getClassLoader());
+//			System.out.println("classLoaderParent:" + this.getClass().getClassLoader().getParent());
+			ServletRequest request = null;
 			try {
-				System.out.println("收到请求!");
-//				System.out.println("classLoader:" + this.getClass().getClassLoader());
-//				System.out.println("classLoaderParent:" + this.getClass().getClassLoader().getParent());
-				ServletRequest request = null;
-				try {
-					request = TonyCatRequestProcess.ProcessRequest(socket);
-				} catch (BlankRequestException e1) {
-					e1.printStackTrace();
-					continue;
-				}
-				ServletResponse response = TonyCatResponseProcess.ProcessResponse(socket);
-				HttpServletRequest httpServletRequest = (HttpServletRequest)request;
-				HttpServletResponse httpServletResponse = (HttpServletResponse)response;
-				/**
-				 * 执行请求
-				 */
-				WebConnecter.connect(httpServletRequest, httpServletResponse);
-			}catch (Exception e) {
-				e.printStackTrace();
-			}finally {
-				socket.close();
+				request = TonyCatRequestProcess.ProcessRequest(socket);
+			} catch (BlankRequestException e1) {
+				e1.printStackTrace();
+				continue;
 			}
-			
+			ServletResponse response = TonyCatResponseProcess.ProcessResponse(socket);
+			HttpServletRequest httpServletRequest = (HttpServletRequest)request;
+			HttpServletResponse httpServletResponse = (HttpServletResponse)response;
+			/**
+			 * 执行请求
+			 */
+			WebConnecter.connect(httpServletRequest, httpServletResponse);
+			socket.close();
 		}
 	}
 }
