@@ -25,6 +25,11 @@
             <directory>target/bin</directory>
             <outputDirectory>/bin</outputDirectory>
         </fileSet>
+         <fileSet>
+            <directory>target/webapps</directory>
+            <outputDirectory>/webapps</outputDirectory>
+        </fileSet>
+        
         <!-- 从源目录拷贝文件去压缩 -->
         <fileSet>
             <directory>src/main/run</directory>

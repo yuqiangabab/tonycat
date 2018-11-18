@@ -94,6 +94,7 @@
 						<configuration>
 							<tasks>
 								<move file="${project.build.directory}\${tonycat.name}-${tonycat.version}.jar" tofile="${project.build.directory}\bin\${tonycat.name}-${tonycat.version}.jar"></move>
+								<mkdir dir="${project.build.directory}\webapps" />
 							</tasks>
 						</configuration>
 					</execution>
