@@ -13,7 +13,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.tony.tonycat.exception.BlankRequestException;
 import com.tony.tonycat.io.TonyCatInputStream;
-import com.tony.tonycat.util.RequestResolver;
 /**
  * 用于将sokect封装为request
 * <p>Title: TonyCatRequestProcess</p>  

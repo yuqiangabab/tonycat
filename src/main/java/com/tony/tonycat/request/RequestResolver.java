@@ -1,4 +1,4 @@
-package com.tony.tonycat.util;
+package com.tony.tonycat.request;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,13 +42,11 @@ public class RequestResolver {
 		return uriAndPar.split("\\?")[0];
 	}
 	public String getContextPath() {
-		System.out.println("this.getUri() :" + this.getUri());
 		String contextPath = "/" + this.getUri().split("/")[1];
 		return contextPath;
 	}
 	public String getServletPath() {
 		String servletPath = "/" + this.getUri().split("/")[2];
-		System.out.println("servletPath:" + servletPath);
 		return servletPath;
 	}
 	/**

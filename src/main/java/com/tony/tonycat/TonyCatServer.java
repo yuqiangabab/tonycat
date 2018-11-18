@@ -15,11 +15,11 @@ import com.tony.tonycat.response.TonyCatResponseProcess;
 import com.tony.tonycat.web.WebConnecter;
 
 public class TonyCatServer {
-	
+	public static int port = 8080;
 	public void service() throws IOException {
-		ServerSocket serverSocket =new ServerSocket(10086);
+		ServerSocket serverSocket =new ServerSocket(port);
 		while(true) {
-			System.out.println("开始接收请求！");
+			System.out.println("开始接收请求！当前端口:" + port);
 			Socket socket = serverSocket.accept();
 			try {
 				System.out.println("收到请求!");

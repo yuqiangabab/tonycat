@@ -87,7 +87,6 @@ public class TonyCatClassLoaderUtils {
     private static List<File> scanDir(String jarPath) {
         List<File> list = new ArrayList<File>();
         File[] files = new File(jarPath).listFiles();
-        System.out.println("classLoaderJarPath:" + jarPath);
         if(files == null) {
         	return TonyCollectionUtils.getEmptyList();
         }

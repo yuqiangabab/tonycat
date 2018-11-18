@@ -7,7 +7,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<properties>
 		<tonycat.version>1.0.0</tonycat.version>
-		<tonycat.name>tonycat</tonycat.name>
+		<tonycat.name>tonytian-tonycat</tonycat.name>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -93,7 +93,7 @@
 						</goals>
 						<configuration>
 							<tasks>
-								<move file="${project.build.directory}\${tonycat.name}-${tonycat.version}.jar" tofile="${project.build.directory}\bin\${tonycat.name}-${tonycat.version}.jar"></move>
+								<move file="${project.build.directory}\${tonycat.name}-${tonycat.version}.jar" tofile="${project.build.directory}\lib\${tonycat.name}.jar"></move>
 								<mkdir dir="${project.build.directory}\webapps" />
 							</tasks>
 						</configuration>

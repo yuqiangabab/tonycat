@@ -1,1 +1,1 @@
-java -jar tonycat-1.0.0.jar
+java -jar ../lib/tonytian-tonycat.jar
