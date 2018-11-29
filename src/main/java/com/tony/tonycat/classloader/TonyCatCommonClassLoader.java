@@ -1,7 +1,12 @@
 package com.tony.tonycat.classloader;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Enumeration;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.tony.tonycat.classloader.util.TonyCatClassLoaderUtils;
 import com.tony.tonycat.util.TonyCatPathUtils;
@@ -16,10 +21,15 @@ public class TonyCatCommonClassLoader extends ClassLoader {
 
 	private String jarPath;
 	private Map<String, byte[]> classByteMaps;
-
+	/**
+	 * jar中其他资源缓存，如properties
+	 */
+	private Map<String, URL> resourceByteMaps;
 	public TonyCatCommonClassLoader() {
 		jarPath = TonyCatPathUtils.getTonyCatLibPath();
 		classByteMaps = TonyCatClassLoaderUtils.getClassBytesByJarPath(jarPath);
+		resourceByteMaps = TonyCatClassLoaderUtils.getResourcesByJarPath(jarPath);
+	
 		// for(String key :classByteMaps.keySet()) {
 		// System.out.println("key:" + key);
 		// }
@@ -38,7 +48,15 @@ public class TonyCatCommonClassLoader extends ClassLoader {
 		Class<?> defineClass = defineClass(className, b, 0, b.length);
 		return defineClass;
 	}
-
+	/**
+	 * 打破双亲委派
+	 * Title: loadClass
+	 * Description:
+	 * @param name
+	 * @return
+	 * @throws ClassNotFoundException  
+	 * @see java.lang.ClassLoader#loadClass(java.lang.String)
+	 */
 	@Override
 	public Class<?> loadClass(String name) throws ClassNotFoundException {
 
@@ -64,5 +82,25 @@ public class TonyCatCommonClassLoader extends ClassLoader {
 		}
 		classByteMaps.remove(className);
 		return result;
+	}
+	/**
+	 * 重写此方法 加载jar包中的资源
+	 * Title: findResource
+	 * Description:
+	 * @param name
+	 * @return  
+	 * @see java.lang.ClassLoader#findResource(java.lang.String)
+	 */
+	@Override
+	protected URL findResource(String name) {
+		URL url = resourceByteMaps.get(name);
+		if(url != null) {
+			return url;
+		}
+		return super.findResource(name);
+	}
+	@Override
+	protected Enumeration<URL> findResources(String name) throws IOException {
+		return super.findResources(name);
 	}
 }

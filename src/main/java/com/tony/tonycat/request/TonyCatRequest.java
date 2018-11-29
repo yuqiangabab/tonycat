@@ -319,8 +319,7 @@ public class TonyCatRequest implements HttpServletRequest {
 	}
 	@Override
 	public String getMethod() {
-		// TODO Auto-generated method stub
-		return null;
+		return method;
 	}
 	@Override
 	public String getPathInfo() {

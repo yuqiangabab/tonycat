@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
@@ -26,6 +27,12 @@ import com.tony.tonycat.util.TonyCollectionUtils;
 * @date 2018年11月17日
  */
 public class TonyCatClassLoaderUtils {
+	private static final String RESOURCE_TYPE_CLASS ="class";
+	private static final String RESOURCE_TYPE_OTHER = "other";
+	/**
+	 *资源url
+	 */
+	private static final String RESOURCE_URL = "jar:file:${path}!/${name}";
 	/**
 	 * 
 	 * Title: getClassBytesByJarPath 
@@ -34,9 +41,19 @@ public class TonyCatClassLoaderUtils {
 	 * @return
 	 */
 	public static Map<String,byte[]> getClassBytesByJarPath(String jarPath){
-		return preReadJarFile(jarPath);
+		return (Map<String, byte[]>) preReadJarFile(jarPath,RESOURCE_TYPE_CLASS);
 		
 	}
+	 /**
+     * 根据jar路径遍历获取其他资源
+     * Title: getResourcesByPath 
+     * Description:   
+     * @return
+     */
+    public static Map<String,URL>  getResourcesByJarPath(String jarPath){
+		return (Map<String, URL>) preReadJarFile(jarPath,RESOURCE_TYPE_OTHER);
+    	
+    }
 	/**
 	 * 读取class返回byte数组
 	 * Title: getClassFileBytesByClassPath 
@@ -66,14 +83,14 @@ public class TonyCatClassLoaderUtils {
 	/**
      * 预读lib下面的包
      */
-	private static Map<String,byte[]> preReadJarFile(String jarPath){
+	private static Map<String,?> preReadJarFile(String jarPath,String resourceType){
         List<File> list = scanDir(jarPath);
-        Map<String,byte[]> resultMap = new  HashMap<String,byte[]>();
+        Map<String,?> resultMap = new  HashMap();
         for(File f : list){
             JarFile jar;
             try {
                 jar = new JarFile(f);
-                readJAR(jar,resultMap);
+                readJAR(jar,resultMap,resourceType);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -97,29 +114,47 @@ public class TonyCatClassLoaderUtils {
         return list;
     }
     /**
-     * 读取一个jar包内的class文件，并存在当前加载器的map中
+     * 根据resourceType读取一个jar包内的class文件或者resource，并存在当前加载器的map中
      * @param jar
      * @throws IOException
      */
-    private static void readJAR(JarFile jar,Map<String,byte[]> resultMap) throws IOException{
+    private static void readJAR(JarFile jar,Map resultMap,String resourceType) throws IOException{
         Enumeration<JarEntry> en = jar.entries();
         while (en.hasMoreElements()){
             JarEntry je = en.nextElement();
             String name = je.getName();
-            if (name.endsWith(".class")){
-                String clss = name.replace(".class", "").replaceAll("/", ".");
-                InputStream input = jar.getInputStream(je);
-                ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
-                int bufferSize = 4096; 
-                byte[] buffer = new byte[bufferSize]; 
-                int bytesNumRead = 0; 
-                while ((bytesNumRead = input.read(buffer)) != -1) { 
-                    baos.write(buffer, 0, bytesNumRead); 
+            String clss = null;
+            //如果当前是想读取class文件，则判断当前文件是否是class文件吗，如果是，则放入map中，如果不是，则continue
+            if(resourceType.equalsIgnoreCase(RESOURCE_TYPE_CLASS)) {
+            	if (name.endsWith(".class")){
+                     clss = name.replace(".class", "").replaceAll("/", ".");
+                     InputStream input = jar.getInputStream(je);
+                     ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
+                     int bufferSize = 4096; 
+                     byte[] buffer = new byte[bufferSize]; 
+                     int bytesNumRead = 0; 
+                     while ((bytesNumRead = input.read(buffer)) != -1) { 
+                         baos.write(buffer, 0, bytesNumRead); 
+                     }
+                     byte[] cc = baos.toByteArray();
+                     input.close();
+                     resultMap.put(clss, cc);//暂时保存下来
+                }else {
+                	continue;
                 }
-                byte[] cc = baos.toByteArray();
-                input.close();
-                resultMap.put(clss, cc);//暂时保存下来
             }
+            //如果当前是想读取其他资源文件，则判断当前文件是否 不是class文件,如果不是，则放入map中，如果是则continue
+            if(resourceType.equalsIgnoreCase(RESOURCE_TYPE_OTHER)) {
+            	if (!name.endsWith(".class") && name.contains(".")){
+                    clss = name;
+                    String resourceUrl = RESOURCE_URL.replace("${path}", jar.getName()).replace("${name}", name);
+                    URL url = new URL(resourceUrl);
+                    resultMap.put(clss, url);
+               }else {
+               		continue;
+               }
+            }
+           
         }
     }
 }

@@ -3,7 +3,11 @@ package com.tony.tonycat.classloader;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
+import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.tony.tonycat.classloader.util.TonyCatClassLoaderUtils;
 import com.tony.tonycat.util.TonyCatPathUtils;
@@ -15,15 +19,30 @@ import com.tony.tonycat.util.TonyCatPathUtils;
  *
  */
 public class TonyCatWebClassLoader extends ClassLoader {
+	/**
+	 * jar的class缓存
+	 */
 	private Map<String, byte[]> classByteMaps;
+	/**
+	 * jar中其他资源缓存，如properties
+	 */
+	private Map<String, URL> resourceByteMaps;
 	private String classPath;
 	/**
 	 * TonyCatCommonClassLoader
 	 */
 	private ClassLoader parent;
+	/**
+	 * 初始化类加载器，将依赖的jar中的class和resource都缓存
+	* Title:
+	* Description:
+	* @param webName
+	* @param parentClassLoader
+	 */
 	public TonyCatWebClassLoader(String webName, ClassLoader parentClassLoader) {
 		String jarPath = TonyCatPathUtils.getWebLibPath(webName);
 		classByteMaps = TonyCatClassLoaderUtils.getClassBytesByJarPath(jarPath);
+		resourceByteMaps = TonyCatClassLoaderUtils.getResourcesByJarPath(jarPath);
 		classPath = TonyCatPathUtils.getWebClassPath(webName);
 		parent = parentClassLoader;
 
@@ -42,11 +61,13 @@ public class TonyCatWebClassLoader extends ClassLoader {
 
 	private byte[] getClassFileBytes(String name) {
 		byte[] b = null;
+		//先从classpath下查找
 		try {
 			String path = classPath + File.separator + name.replace(".", File.separator) + ".class";
 			b = TonyCatClassLoaderUtils.getClassFileBytesByClassPath(path);
 		} catch (Exception e) {
 		}
+		//再从jar包中查找
 		if (b == null) {
 			b = classByteMaps.get(name);
 			if (b != null) {
@@ -78,7 +99,26 @@ public class TonyCatWebClassLoader extends ClassLoader {
 		return clazz;
 
 	}
-
+	/**
+	 * 重写此方法 加载jar包中的资源
+	 * Title: findResource
+	 * Description:
+	 * @param name
+	 * @return  
+	 * @see java.lang.ClassLoader#findResource(java.lang.String)
+	 */
+	@Override
+	protected URL findResource(String name) {
+		URL url = resourceByteMaps.get(name);
+		if(url != null) {
+			return url;
+		}
+		return parent.getResource(name);
+	}
+	@Override
+	protected Enumeration<URL> findResources(String name) throws IOException {
+		return super.findResources(name);
+	}
 	public static void main(String[] args) throws ClassNotFoundException, InstantiationException,
 			IllegalAccessException, IllegalArgumentException, InvocationTargetException, IOException {
 		// TonyCatWebClassLoader tonyCatWebClassLoader = new TonyCatWebClassLoader();
