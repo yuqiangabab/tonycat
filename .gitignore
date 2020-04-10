@@ -5,3 +5,5 @@
 *.class
 *.MF
 target/*
+
+*.xml
